@@ -7,6 +7,7 @@ from fastapi.responses import HTMLResponse
 
 from utils.logger import logger
 
+from service.agent import call_graphql_api
 
 app = FastAPI()
 origins = [
@@ -38,13 +39,18 @@ async def root():
 
 
 @app.post("/query")
-async def query(request: Request):
+async def query(query: str):
     try:
-        data = await request.json()
         logger.info(f"Received query")
+        logger.info(f"Query: {query}")
         # Process the query and return a response
+        response = call_graphql_api(query)
+        logger.info(f"Response: {response}")
         return JSONResponse(
-            content=jsonable_encoder({"message": "Query received", "data": data})
+            content=jsonable_encoder(
+                {"message": "Query received", "query": query, "response": response}
+            ),
+            status_code=200,
         )
     except Exception as e:
         logger.error(f"Error processing query: {e}")
@@ -54,8 +60,6 @@ async def query(request: Request):
         )
 
 
-# run the FastAPI app with uvicorn
-if __name__ == "__main__":
-    import uvicorn
+import uvicorn
 
-    uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)
+uvicorn.run(app, host="0.0.0.0", port=8000)
