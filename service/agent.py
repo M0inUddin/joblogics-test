@@ -31,9 +31,9 @@ def call_graphql_api(query: str):
         )
 
         # Read the local SDL schema file content
-        schema_path = "service/graphqlv2schema.schema.graphql"
-        with open(schema_path, "r", encoding="utf-8") as f:
-            graphql_schema_sdl = f.read()
+        # schema_path = "service/graphqlv2schema.schema.graphql"
+        # with open(schema_path, "r", encoding="utf-8") as f:
+        #     graphql_schema_sdl = f.read()
 
         # Load GraphQL tools with explicit schema content
         tools = load_tools(
